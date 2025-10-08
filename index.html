@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rialo Quiz Master - Test Your Web3 Knowledge</title>
+    <meta name="description" content="Professional quiz application to test your knowledge of Rialo blockchain, Web3 development, and DeFi concepts">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app" class="app-container">
+        <!-- Loading Screen -->
+        <div id="loading-screen" class="screen loading-screen">
+            <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <h2>Loading Rialo Quiz Master</h2>
+                <p>Initializing your Web3 knowledge test...</p>
+            </div>
+        </div>
+
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="screen welcome-screen hidden">
+            <div class="welcome-content">
+                <div class="logo-section">
+                    <div class="app-logo">🚀</div>
+                    <h1 class="app-title">Rialo Quiz Master</h1>
+                    <p class="app-subtitle">Test Your Web3 & Rialo Knowledge</p>
+                </div>
+                
+                <div class="welcome-description">
+                    <p>Challenge yourself with 20 carefully crafted questions about Rialo blockchain, Web3 development, and DeFi concepts. Test your knowledge and earn your place on the leaderboard!</p>
+                </div>
+
+                <div class="stats-preview">
+                    <div class="stat-item">
+                        <span class="stat-number">20</span>
+                        <span class="stat-label">Questions</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">4</span>
+                        <span class="stat-label">Categories</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">30s</span>
+                        <span class="stat-label">Per Question</span>
+                    </div>
+                </div>
+
+                <div class="welcome-actions">
+                    <button class="btn btn--primary btn--lg" onclick="showCategorySelection()">
+                        Start Quiz Journey
+                    </button>
+                    <button class="btn btn--secondary" onclick="showLeaderboard()">
+                        View Leaderboard
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Selection Screen -->
+        <div id="category-screen" class="screen category-screen hidden">
+            <div class="category-content">
+                <h2>Choose Your Challenge</h2>
+                <p class="category-description">Select specific categories to focus on, or take the complete challenge</p>
+                
+                <div class="category-grid" id="category-grid">
+                    <!-- Categories will be populated by JavaScript -->
+                </div>
+
+                <div class="category-actions">
+                    <button class="btn btn--primary btn--lg" onclick="selectAllCategories()">
+                        All Topics Challenge
+                    </button>
+                    <button class="btn btn--outline" onclick="proceedWithSelectedCategories()" id="proceed-btn" disabled>
+                        Continue with Selected
+                    </button>
+                </div>
+
+                <div class="navigation">
+                    <button class="btn btn--secondary btn--sm" onclick="showWelcomeScreen()">
+                        ← Back
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Instructions Screen -->
+        <div id="instructions-screen" class="screen instructions-screen hidden">
+            <div class="instructions-content">
+                <h2>Quiz Instructions</h2>
+                
+                <div class="instructions-grid">
+                    <div class="instruction-item">
+                        <div class="instruction-icon">⏱️</div>
+                        <div class="instruction-text">
+                            <h3>Time Limit</h3>
+                            <p>You have 30 seconds to answer each question. The timer starts when the question appears.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="instruction-item">
+                        <div class="instruction-icon">🎯</div>
+                        <div class="instruction-text">
+                            <h3>Scoring</h3>
+                            <p>Easy questions: 5 points, Medium: 10 points, Hard: 15 points. Bonus points for quick answers!</p>
+                        </div>
+                    </div>
+                    
+                    <div class="instruction-item">
+                        <div class="instruction-icon">📚</div>
+                        <div class="instruction-text">
+                            <h3>Learning</h3>
+                            <p>After each answer, you'll see an explanation to help you learn and improve.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="instruction-item">
+                        <div class="instruction-icon">🏆</div>
+                        <div class="instruction-text">
+                            <h3>Achievement</h3>
+                            <p>Score 70%+ to earn your Rialo certification badge and join the expert community!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="scoring-tiers">
+                    <h3>Performance Tiers</h3>
+                    <div class="tier-list">
+                        <div class="tier-item">
+                            <span class="tier-badge">🌱</span>
+                            <span class="tier-name">Rialo Newcomer (0-50%)</span>
+                        </div>
+                        <div class="tier-item">
+                            <span class="tier-badge">🔨</span>
+                            <span class="tier-name">Rialo Builder (51-75%)</span>
+                        </div>
+                        <div class="tier-item">
+                            <span class="tier-badge">🏆</span>
+                            <span class="tier-name">Rialo Expert (76-90%)</span>
+                        </div>
+                        <div class="tier-item">
+                            <span class="tier-badge">👑</span>
+                            <span class="tier-name">Rialo Master (91-100%)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="instructions-actions">
+                    <button class="btn btn--primary btn--lg" onclick="startQuiz()">
+                        Begin Quiz
+                    </button>
+                    <button class="btn btn--secondary" onclick="showCategorySelection()">
+                        ← Change Categories
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="screen quiz-screen hidden">
+            <div class="quiz-header">
+                <div class="quiz-progress">
+                    <div class="progress-info">
+                        <span class="question-counter">Question <span id="current-question">1</span> of <span id="total-questions">20</span></span>
+                        <span class="category-label" id="current-category">Rialo Basics</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+                
+                <div class="quiz-stats">
+                    <div class="stat">
+                        <span class="stat-label">Score</span>
+                        <span class="stat-value" id="current-score">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Time</span>
+                        <span class="stat-value" id="timer">30</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quiz-content">
+                <div class="question-section">
+                    <div class="difficulty-indicator" id="difficulty-indicator">Medium</div>
+                    <h2 class="question-text" id="question-text">Loading question...</h2>
+                </div>
+
+                <div class="answers-section" id="answers-section">
+                    <!-- Answer options will be populated by JavaScript -->
+                </div>
+
+                <div class="question-actions">
+                    <button class="btn btn--outline btn--sm" onclick="pauseQuiz()" id="pause-btn">
+                        ⏸️ Pause
+                    </button>
+                </div>
+            </div>
+
+            <!-- Answer Feedback -->
+            <div class="answer-feedback hidden" id="answer-feedback">
+                <div class="feedback-content">
+                    <div class="feedback-result" id="feedback-result">
+                        <span class="feedback-icon">✅</span>
+                        <span class="feedback-text">Correct!</span>
+                    </div>
+                    <div class="feedback-explanation" id="feedback-explanation">
+                        <!-- Explanation will be populated by JavaScript -->
+                    </div>
+                    <button class="btn btn--primary" onclick="nextQuestion()" id="next-btn">
+                        Next Question →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="screen results-screen hidden">
+            <div class="results-content">
+                <div class="results-header">
+                    <div class="achievement-badge" id="achievement-badge">
+                        <span class="badge-icon">🏆</span>
+                        <span class="badge-name">Rialo Expert</span>
+                    </div>
+                    <h2 class="results-title">Quiz Complete!</h2>
+                </div>
+
+                <div class="score-summary">
+                    <div class="final-score">
+                        <span class="score-number" id="final-score">85</span>
+                        <span class="score-label">/ 100</span>
+                    </div>
+                    <p class="score-message" id="score-message">
+                        Excellent! You have deep knowledge of Rialo's architecture and Web3 development.
+                    </p>
+                </div>
+
+                <div class="performance-breakdown" id="performance-breakdown">
+                    <!-- Category performance will be populated by JavaScript -->
+                </div>
+
+                <div class="results-actions">
+                    <button class="btn btn--primary btn--lg" onclick="restartQuiz()">
+                        Take Quiz Again
+                    </button>
+                    <button class="btn btn--secondary" onclick="showLeaderboard()">
+                        View Leaderboard
+                    </button>
+                    <button class="btn btn--outline" onclick="showWelcomeScreen()">
+                        Back to Home
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Leaderboard Screen -->
+        <div id="leaderboard-screen" class="screen leaderboard-screen hidden">
+            <div class="leaderboard-content">
+                <h2>Community Leaderboard</h2>
+                <p class="leaderboard-description">Top performers in the Rialo Quiz Challenge</p>
+                
+                <div class="leaderboard-list" id="leaderboard-list">
+                    <!-- Leaderboard entries will be populated by JavaScript -->
+                </div>
+
+                <div class="leaderboard-actions">
+                    <button class="btn btn--primary" onclick="showWelcomeScreen()">
+                        Back to Home
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Panel -->
+        <div id="settings-panel" class="settings-panel hidden">
+            <div class="settings-content">
+                <h3>Settings</h3>
+                <div class="setting-item">
+                    <label class="form-label">Sound Effects</label>
+                    <button class="btn btn--outline btn--sm toggle-btn" onclick="toggleSound()" id="sound-toggle">
+                        🔊 On
+                    </button>
+                </div>
+                <div class="setting-item">
+                    <label class="form-label">Theme</label>
+                    <button class="btn btn--outline btn--sm toggle-btn" onclick="toggleTheme()" id="theme-toggle">
+                        🌙 Dark
+                    </button>
+                </div>
+                <button class="btn btn--secondary btn--sm" onclick="closeSettings()">Close</button>
+            </div>
+        </div>
+
+        <!-- Floating Action Buttons -->
+        <div class="floating-actions">
+            <button class="fab" onclick="openSettings()" title="Settings">
+                ⚙️
+            </button>
+            <button class="fab" onclick="showHelp()" title="Help">
+                ❓
+            </button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
